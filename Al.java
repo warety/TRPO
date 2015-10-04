@@ -6,6 +6,7 @@ public class Al {
 	 String name = "0";
 	 String login;
 	 String password;
+	 static String salt = "ololo";
 
 	 public void showUserDate() {
 	 	System.out.println("id: " + this.id);
@@ -47,7 +48,7 @@ public class Al {
         
 	 public String makeHash(String password) {//hash(hash(pass)+salt)
    		password = getHash(password);
-   		password += "ololo";
+   		password += salt;
    		password = getHash(password);
    		return password;
 }
@@ -89,17 +90,5 @@ public class Al {
     	id = this.id;
     	return id;
     }
-
-
-	 
-
-	 public static void main(String... args) {
-		Al one = new Al();
-		one.setUser("warety","1234");
-		one.setOtherDate("Alex");
-		one.showUserDate();
-		one.equil("warety","1234");
-
-	}
 
 }
