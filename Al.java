@@ -91,4 +91,27 @@ public class Al {
     	return id;
     }
 
+
+
+    public void getRights(String sourse, Role[ ] two) {
+
+    	for(int i = 0; i < 2; i++)
+    	{
+    		if(id == two[i].user.id)
+    		{
+    			if(sourse.equals(two[i].sourse))
+    			{
+    			System.out.println(two[i].rights);
+    			break;
+    		 	}
+    		}
+    		
+
+    	}
+
+    	
+    }
+
+
+
 }
