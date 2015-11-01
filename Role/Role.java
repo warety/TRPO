@@ -1,6 +1,8 @@
 package Role;
 
 import Auth.User;
+import javax.annotation.processing.SupportedSourceVersion;
+import java.util.Objects;
 
 /**
  * Created by alex on 07.10.2015.
@@ -8,11 +10,11 @@ import Auth.User;
 public class Role {
     int id = 0;
     User user;
-    int rights;
+    Roles rights;
     String sourse;
 
 
-    public void setRights(User user, int rights, String sourse) {
+    public void setRights(User user, Roles rights, String sourse) {
 
         id++;
         this.user = user;
@@ -26,18 +28,37 @@ public class Role {
     }
 
     public int  checkRights(Role role){
-        if(role.sourse.equals(this.sourse)){
-            if(role.rights == this.rights)
-            {
-                return 1;
+       // String res = role.rights;
+        System.out.println(this.sourse);
+        String parse[] = role.sourse.split("\\.");
+        String[] atrStr = this.sourse.split("\\.");
+        //System.out.println(parse[0] + " " + parse[1] + " " + atrStr[0] + " " + atrStr[1]);
+        if (parse.length >= atrStr.length) {
+
+            for (int i = 0; i < atrStr.length; i++) {
+               //  System.out.println(parse[i] + " " + atrStr[i]);
+
+                if (parse[i].equals(atrStr[i])) {
+                   // System.out.println(parse[i] + " " + atrStr[i]);
+                    continue;
+                } else {
+                    System.out.println("Nine");
+                    System.exit(4);
+                }
+
             }
-            else
-            {
-                return 2;
-            }
+
+
+
+
+                if (role.rights == this.rights) {
+                    return 1;
+                } else {
+                    return 2;
+                }
+
         }
-        else
-        {
+        else {
             return 3;
         }
     }
