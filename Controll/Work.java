@@ -8,7 +8,9 @@ import Role.Roles;
 import javax.annotation.processing.SupportedSourceVersion;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  * Created by alex on 17.10.2015.
@@ -73,7 +75,7 @@ public class Work {
             role1.setRights(user1, rights, str1[3]);
             checkRights(role, user1, role1);
             checkDate(str1[4]);
-            SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             Date date1 = format.parse(str1[4]);
             checkDate(str1[5]);
             //SimpleDateFormat format2 = new SimpleDateFormat("yyyy.MM.dd");
@@ -140,13 +142,19 @@ public class Work {
 
     static public void checkDate(String str1)
     {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
         try {
-            Date date = format.parse(str1);
-        } catch (ParseException ex) {
-            System.out.println("invalid date");
+            Calendar calendar = new GregorianCalendar();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
+            formatter.setLenient(false);
+            calendar.setTime(formatter.parse(str1));
+
+
+
+        }
+        catch (Exception e) {
             System.exit(5);
         }
+
 
 
     }

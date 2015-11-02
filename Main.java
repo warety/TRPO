@@ -39,9 +39,9 @@ public class Main {
         role[2].setRights(user[0], Roles.READ, "iais");
         role[3].setRights(user[0], Roles.READ, "bbc");
         role[4].setRights(user[0], Roles.READ, "src");
-        String auto = "";
+        String auto = "warety 1234 READ AB.C 2004-12-12 2007-12-12 5";
 
-        Options options = new Options()
+        /*Options options = new Options()
                 .addOption("h",false,"print this help message")
                 .addOption("login",true,"login")
                 .addOption("pass",true,"password")
@@ -57,21 +57,27 @@ public class Main {
 
             if (cmd.hasOption("login")) {
                 auto += cmd.getOptionValue("login");
+                auto += " ";
             }
             if (cmd.hasOption("pass")) {
                 auto += cmd.getOptionValue("pass");
+                auto += " ";
             }
             if (cmd.hasOption("res")) {
                 auto += cmd.getOptionValue("res");
+                auto += " ";
             }
             if (cmd.hasOption("role")) {
                 auto += cmd.getOptionValue("role");
+                auto += " ";
             }
             if (cmd.hasOption("ds")) {
                 auto += cmd.getOptionValue("ds");
+                auto += " ";
             }
             if (cmd.hasOption("de")) {
                 auto += cmd.getOptionValue("de");
+                auto += " ";
             }
             if (cmd.hasOption("vol")) {
                 auto += cmd.getOptionValue("vol");
@@ -103,7 +109,7 @@ public class Main {
         //String auto = "warety 1234 READ AB.C.D";
 
 
-       // Work.check(auto, user, role);
+        Work.check(auto, user, role);
 
         //Work.check(user, login, password, role, 7, "wiki");
 
