@@ -28,21 +28,16 @@ public class Role {
     }
 
     public int  checkRights(Role role){
-       // String res = role.rights;
-        System.out.println(this.sourse);
+
         String parse[] = role.sourse.split("\\.");
         String[] atrStr = this.sourse.split("\\.");
-        //System.out.println(parse[0] + " " + parse[1] + " " + atrStr[0] + " " + atrStr[1]);
         if (parse.length >= atrStr.length) {
 
             for (int i = 0; i < atrStr.length; i++) {
-               //  System.out.println(parse[i] + " " + atrStr[i]);
-
                 if (parse[i].equals(atrStr[i])) {
-                   // System.out.println(parse[i] + " " + atrStr[i]);
                     continue;
                 } else {
-                    System.out.println("Nine");
+                    System.out.println("No Dostup(4)");
                     System.exit(4);
                 }
 
