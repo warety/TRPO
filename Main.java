@@ -104,7 +104,7 @@ public class Main {
             }
             if (cmd.hasOption("de")) {
                 de = cmd.getOptionValue("de");
-                Work.checkDate(ds);
+                Work.checkDate(de);
                 arg++;
 
             }
