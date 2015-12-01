@@ -13,6 +13,10 @@ public class User {
     public String password;
     String salt = "ololo";
 
+
+
+
+
     public void setUser(String login, String password) {
         this.login = login;
         this.password = Hash.makeHash(password, salt);

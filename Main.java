@@ -1,9 +1,11 @@
+import Accaunt.Accaunt;
 import Auth.User;
 import Controll.Work;
 import Role.Role;
 import Role.Roles;
 import org.apache.commons.cli.*;
 
+import java.sql.Date;
 import java.text.ParseException;
 import java.util.Scanner;
 
@@ -13,18 +15,28 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws ParseException {
+        String login = "";
+        String pass = "";
+        String res = "";
+        String rol = "READ";
+        String ds = "";
+        String de = "";
+        String vol = "";
+        int arg = 0;
 
-        int j = -1;
-        String login, password;
-        login = "warety";
-        password = "1234";
-        Scanner in = new Scanner(System.in);
+        User user1 = new User();
+        Role role1 = new Role();
+        Accaunt acc1 = new Accaunt();
+
+
+
+
+
         User user[] = new User[2];
         for (int i = 0; i < 2; i++)
             user[i] = new User();
-        user[0].setUser("warety", "1234");
-        user[1].setUser("darkrain", "548");
-
+        user[0].setUser("jdoe", "sup3rpaZZ");
+        user[1].setUser("jrow", "Qweqrty12");
 
 
 
@@ -34,14 +46,14 @@ public class Main {
         for (int i = 0; i < role.length; i++ )
             role[i] = new Role();
 
-        role[0].setRights(user[0], Roles.READ, "AB.C");
-        role[1].setRights(user[1], Roles.EXEC, "AB.C");
-        role[2].setRights(user[0], Roles.READ, "iais");
-        role[3].setRights(user[0], Roles.READ, "bbc");
+        role[0].setRights(user[0], Roles.READ, "a");
+        role[1].setRights(user[0], Roles.WRITE, "a.b");
+        role[2].setRights(user[1], Roles.EXEC, "a.b.c");
+        role[3].setRights(user[0], Roles.EXEC, "a.bc");
         role[4].setRights(user[0], Roles.READ, "src");
-        String auto = "warety 1234 READ AB.C 2004-12-12 2007-12-12 5";
+        String auto = "";
 
-        /*Options options = new Options()
+        Options options = new Options()
                 .addOption("h",false,"print this help message")
                 .addOption("login",true,"login")
                 .addOption("pass",true,"password")
@@ -55,84 +67,87 @@ public class Main {
         try {
             CommandLine cmd = parser.parse(options, args);
 
+            if (cmd.hasOption("h"))
+            {
+                Work.printHelp();
+            }
             if (cmd.hasOption("login")) {
-                auto += cmd.getOptionValue("login");
-                auto += " ";
+               login = cmd.getOptionValue("login");
+                arg++;
+
             }
             if (cmd.hasOption("pass")) {
-                auto += cmd.getOptionValue("pass");
-                auto += " ";
+                pass = cmd.getOptionValue("pass");
+                arg++;
             }
             if (cmd.hasOption("res")) {
-                auto += cmd.getOptionValue("res");
-                auto += " ";
+                res = cmd.getOptionValue("res");
+                arg++;
+
             }
             if (cmd.hasOption("role")) {
-                auto += cmd.getOptionValue("role");
-                auto += " ";
+                if(cmd.getOptionValue("role").equals("EXEC") || cmd.getOptionValue("role").equals("WRITE") || cmd.getOptionValue("role").equals("READ")) {
+                    rol = cmd.getOptionValue("role");
+                    arg++;
+                }
+                else{
+                    System.out.print("Wrong role(3)");
+                    System.exit(3);
+                }
+
             }
             if (cmd.hasOption("ds")) {
-                auto += cmd.getOptionValue("ds");
-                auto += " ";
+                ds = cmd.getOptionValue("ds");
+                Work.checkDate(ds);
+                arg++;
+
             }
             if (cmd.hasOption("de")) {
-                auto += cmd.getOptionValue("de");
-                auto += " ";
+                de = cmd.getOptionValue("de");
+                Work.checkDate(ds);
+                arg++;
+
             }
             if (cmd.hasOption("vol")) {
-                auto += cmd.getOptionValue("vol");
+                vol = cmd.getOptionValue("vol");
+                arg++;
             }
         }
         catch (org.apache.commons.cli.ParseException e) {
-            printHelp(options);
-            System.exit(255);
+            Work.printHelp();
+            //System.exit(255);
         }
 
-        /*if ( commandLine.hasOption("h") ) {
-            //arguments.add(commandLine.getOptionValue("h"));
-
-            System.out.println("[-h] - Show help\n" +
-                    "[-login login] - Enter login\n" +
-                    "[-pass password] - Enter password\n" +
-                    "Login may be entered just with the password" +
-                    "[-res resource] - Enter resource\n" +
-                    "[-role role] - Enter role\n" +
-                    "Resource may be entered just with the role" +
-                    "[-ds date] - Enter date1\n" +
-                    "[-df date] - Enter date2\n" +
-                    "[-vol volume] - Enter volume\n" +
-                    "Dates and volume may be entered just together");
+        user1.setUser(login, pass);
+        role1.setRights(user1, Roles.valueOf(rol), res);
+        if (arg == 2){
+            Work.checkUser(user, user1);
+            //System.out.println("Success");
             System.exit(0);
-        }*/
-
-
-        //String auto = "warety 1234 READ AB.C.D";
-
-
-        Work.check(auto, user, role);
-
-        //Work.check(user, login, password, role, 7, "wiki");
-
-       // Work.checkRights(role, user[0], 7, "github");
-
+        }
+        else if (arg == 4){
+            Work.checkUser(user, user1);
+            Work.checkRights(role, user1, role1);
+            //System.out.println("Success");
+            System.exit(0);
+        }
+        else if (arg == 7)
+        {
+            Work.checkUser(user, user1);
+            Work.checkRights(role, user1, role1);
+            Work.checkVolume(vol);
+            acc1.setAcc(user1, role1, Date.valueOf(ds), Date.valueOf(de), Integer.valueOf(vol));
+            //System.out.println("Success");
+            System.exit(0);
+        }
+        else
+        {
+            Work.printHelp();
+        }
 
     }
 
-    static void printHelp(Options options) {
 
-        System.out.println("[-h] - Show help\n" +
-                "[-login login] - Enter login\n" +
-                "[-pass password] - Enter password\n" +
-                "Login may be entered just with the password" +
-                "[-res resource] - Enter resource\n" +
-                "[-role role] - Enter role\n" +
-                "Resource may be entered just with the role" +
-                "[-ds date] - Enter date1\n" +
-                "[-df date] - Enter date2\n" +
-                "[-vol volume] - Enter volume\n" +
-                "Dates and volume may be entered just together");
-        System.exit(0);
-    }
 
 
 }
