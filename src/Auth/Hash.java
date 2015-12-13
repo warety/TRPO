@@ -1,23 +1,21 @@
-package Auth;
+package auth;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Created by alex on 07.10.2015.
- */
+
 public class Hash {
 
-    public static String makeHash(String password, String salt) {//hash(hash(pass)+salt)
+    public static String makeHash(String password, String salt) {
         password = getHash(password);
         password += salt;
         password = getHash(password);
         return password;
     }
 
-    public static String getHash(String str) {//MD5 хэшировние. Пока не понял как работает
-        MessageDigest md5 ;
-        StringBuffer  hexString = new StringBuffer();
+    public static String getHash(String str) {
+        MessageDigest md5;
+        StringBuffer hexString = new StringBuffer();
 
         try {
 
@@ -33,8 +31,7 @@ public class Hash {
                 hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
             }
 
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             return e.toString();
         }
 
