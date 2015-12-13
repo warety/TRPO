@@ -1,6 +1,7 @@
-package Role;
+package role;
 
-import Auth.User;
+import auth.User;
+
 import javax.annotation.processing.SupportedSourceVersion;
 import java.util.Objects;
 
@@ -22,12 +23,11 @@ public class Role {
         this.sourse = sourse;
     }
 
-    public User getUser()
-    {
+    public User getUser() {
         return this.user;
     }
 
-    public int  checkRights(Role role){
+    public int checkRights(Role role) {
 
         String parse[] = role.sourse.split("\\.");
         String[] atrStr = this.sourse.split("\\.");
@@ -44,16 +44,13 @@ public class Role {
             }
 
 
+            if (role.rights == this.rights) {
+                return 1;
+            } else {
+                return 2;
+            }
 
-
-                if (role.rights == this.rights) {
-                    return 1;
-                } else {
-                    return 2;
-                }
-
-        }
-        else {
+        } else {
             return 3;
         }
     }
