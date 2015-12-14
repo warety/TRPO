@@ -9,15 +9,23 @@ import java.util.Objects;
  * Created by alex on 07.10.2015.
  */
 public class Role {
-    int id = 0;
     User user;
     Roles rights;
     String sourse;
 
+    public Role(){
+
+    }
+
+    public Role(User user, Roles rights, String sourse) {
+        this.user = user;
+        this.rights = rights;
+        this.sourse = sourse;
+    }
+
+
 
     public void setRights(User user, Roles rights, String sourse) {
-
-        id++;
         this.user = user;
         this.rights = rights;
         this.sourse = sourse;
@@ -37,7 +45,6 @@ public class Role {
                 if (parse[i].equals(atrStr[i])) {
                     continue;
                 } else {
-                    System.out.println("No Dostup(4)");
                     System.exit(4);
                 }
 

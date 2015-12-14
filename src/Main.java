@@ -5,6 +5,7 @@ import role.Role;
 import role.Roles;
 import org.apache.commons.cli.*;
 
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.text.ParseException;
 import java.util.Scanner;
@@ -22,8 +23,7 @@ public class Main {
         String vol = "";
         int arg = 0;
 
-        User user1 = new User();
-        Role role1 = new Role();
+
         Accaunt acc1 = new Accaunt();
 
 
@@ -59,8 +59,8 @@ public class Main {
         try {
             CommandLine cmd = parser.parse(options, args);
 
-            if (cmd.hasOption("h")) {
-                Work.printHelp();
+            if(cmd.hasOption("h")) {
+                printHelp(options);
             }
             if (cmd.hasOption("login")) {
                 login = cmd.getOptionValue("login");
@@ -81,7 +81,6 @@ public class Main {
                     rol = cmd.getOptionValue("role");
                     arg++;
                 } else {
-                    System.out.print("Wrong role(3)");
                     System.exit(3);
                 }
 
@@ -103,12 +102,12 @@ public class Main {
                 arg++;
             }
         } catch (org.apache.commons.cli.ParseException e) {
-            Work.printHelp();
+            printHelp(options);
 
         }
 
-        user1.setUser(login, pass);
-        role1.setRights(user1, Roles.valueOf(rol), res);
+        User user1 = new User(login, pass);
+        Role role1 = new Role(user1, Roles.valueOf(rol), res);
         if (arg == 2) {
             Work.checkUser(user, user1);
 
@@ -125,10 +124,30 @@ public class Main {
             acc1.setAcc(user1, role1, Date.valueOf(ds), Date.valueOf(de), Integer.valueOf(vol));
 
             System.exit(0);
-        } else {
-            Work.printHelp();
+        }
+        else{
+            printHelp(options);
         }
 
+    }
+
+    static void printHelp(Options options) {
+        final PrintWriter writer = new PrintWriter(System.out);
+        final HelpFormatter helpFormatter = new HelpFormatter();
+
+        helpFormatter.printHelp(
+                writer,
+                80,
+                "[program]",
+                "Options:",
+                options,
+                3,
+                5,
+                "-- HELP --",
+                true);
+
+        writer.flush();
+        System.exit(0);
     }
 
 
