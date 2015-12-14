@@ -16,46 +16,35 @@ import java.util.GregorianCalendar;
 public class Work {
 
 
-    static public void check(String in, User[] user, Role[] role) throws ParseException {
-
-
-    }
-
     static public void checkUser(User[] user, User user1) {
+        boolean f = false;
 
-        int l = 0;
-        int f = 0;
         for (int i = 0; i < user.length; i++) {
             if (user1.checkUser(user[i]) == 1) {
-                f = 1;
+                f = true;
+                break;
             }
-            if (user1.checkUser(user[i]) == 2) {
-                l = 2;
-            }
-        }
-        if (f != 1) {
-            if (l == 2) {
-
+            else if(user1.checkUser(user[i]) == 2)
                 System.exit(2);
             }
-            if (l == 0) {
-
+            if (f == false){
                 System.exit(1);
-            }
         }
+
+
     }
 
     static public void checkRights(Role[] role, User user, Role role1) {
-        int l = 0;
+        boolean l = false;
         for (int i = 0; i < role.length; i++) {
             if (user.checkUser(role[i].getUser()) == 1) {
                 if (role[i].checkRights(role1) == 1) {
-                    l = 1;
+                    l = true;
                     break;
                 }
             }
         }
-        if (l == 0) {
+        if (l == false) {
 
             System.exit(4);
         }
@@ -92,20 +81,5 @@ public class Work {
     }
 
 
-    static public void printHelp() {
-        System.out.print("lol");
 
-        System.out.println("[-h] - Show help\n" +
-                "[-login login] - Enter login\n" +
-                "[-pass password] - Enter password\n" +
-                "Login may be entered just with the password" +
-                "[-res resource] - Enter resource\n" +
-                "[-role role] - Enter role\n" +
-                "Resource may be entered just with the role" +
-                "[-ds date] - Enter date1\n" +
-                "[-df date] - Enter date2\n" +
-                "[-vol volume] - Enter volume\n" +
-                "Dates and volume may be entered just together");
-        System.exit(0);
-    }
 }
