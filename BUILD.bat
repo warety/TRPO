@@ -1,4 +1,5 @@
-
+rmdir /S /Q workAP
+del AAAproj.jar
 mkdir workAP
 
 
