@@ -1,6 +1,7 @@
-package Role;
+package role;
 
-import Auth.User;
+import auth.User;
+
 import javax.annotation.processing.SupportedSourceVersion;
 import java.util.Objects;
 
@@ -8,26 +9,33 @@ import java.util.Objects;
  * Created by alex on 07.10.2015.
  */
 public class Role {
-    int id = 0;
     User user;
     Roles rights;
     String sourse;
 
+    public Role(){
 
-    public void setRights(User user, Roles rights, String sourse) {
+    }
 
-        id++;
+    public Role(User user, Roles rights, String sourse) {
         this.user = user;
         this.rights = rights;
         this.sourse = sourse;
     }
 
-    public User getUser()
-    {
+
+
+    public void setRights(User user, Roles rights, String sourse) {
+        this.user = user;
+        this.rights = rights;
+        this.sourse = sourse;
+    }
+
+    public User getUser() {
         return this.user;
     }
 
-    public int  checkRights(Role role){
+    public int checkRights(Role role) {
 
         String parse[] = role.sourse.split("\\.");
         String[] atrStr = this.sourse.split("\\.");
@@ -37,23 +45,19 @@ public class Role {
                 if (parse[i].equals(atrStr[i])) {
                     continue;
                 } else {
-                    System.out.println("No Dostup(4)");
                     System.exit(4);
                 }
 
             }
 
 
+            if (role.rights == this.rights) {
+                return 1;
+            } else {
+                return 2;
+            }
 
-
-                if (role.rights == this.rights) {
-                    return 1;
-                } else {
-                    return 2;
-                }
-
-        }
-        else {
+        } else {
             return 3;
         }
     }

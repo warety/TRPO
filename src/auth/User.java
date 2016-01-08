@@ -1,32 +1,35 @@
-package Auth;
+package auth;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-/**
- * Created by alex on 07.10.2015.
- */
+
 public class User {
-    int id = 0;
-    //String name = "0";
-    public String login;
-    public String password;
-    String salt = "ololo";
+    String login;
+    String password;
+    static String  salt = "ololo";
 
 
+    public User() {
 
+        this.login = "";
+        this.password = "";
+    }
+
+
+    public User(String login, String password) {
+        this.login = login;
+        this.password = Hash.makeHash(password, salt);
+    }
 
 
     public void setUser(String login, String password) {
         this.login = login;
         this.password = Hash.makeHash(password, salt);
-        this.id++;
 
     }
 
     public User getUser(User user) {
-        user.id = this.id;
-        user.password = this.password;
         return user;
     }
 
@@ -34,12 +37,12 @@ public class User {
         if (user.login.equals(this.login)) {
             if (user.password.equals(this.password)) {
                 return 1;
-            }
-            else{
+            } else {
                 return 2;
             }
+        } else {
+            return 3;
         }
-        return 3;
     }
 
 }
