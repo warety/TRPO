@@ -89,6 +89,7 @@ public class Work {
             String login = resultSet.getString("login");
             String password = resultSet.getString("hash");
             if (user1.getLogin().equals(login)) {
+
                 flag = true;
 
                 if (user1.getPassword().equals(password)) {
@@ -120,15 +121,62 @@ public class Work {
         //Statement statement = connection.createStatement();
 
         //String query = "select * from AUTH";
-        boolean flag = false;
-        PreparedStatement ps = connection.prepareStatement("SELECT * FROM ROLES");
+        boolean flag1 = false;
+        boolean flag2 = false;
+        boolean flag3 = false;
+        PreparedStatement ps = connection.prepareStatement("SELECT * FROM ROLES R, AUTH A where r.auth_id = a.id and a.login = ?");
 
 
-        //ps.setString(1, user1.getLogin());
+
+        ps.setString(1, user.getLogin());
         resultSet = ps.executeQuery();
+        System.out.println(role1.getSourse());
 
 
         boolean l = false;
+        while(resultSet.next())
+        {
+            Roles rights = Roles.valueOf(resultSet.getString("ROLE"));
+            String sourse = resultSet.getString("RESOURCE");
+            System.out.println(rights.toString());
+
+            String parse[] = role1.getSourse().split("\\.");
+            String[] atrStr = sourse.split("\\.");
+            if (parse.length >= atrStr.length) {
+                flag1 = false;
+
+                //System.out.println("my " + parse[0] + " " + " bd " + atrStr[0]);
+
+                for (int i = 0; i < atrStr.length; i++) {
+                    if (parse[i].equals(atrStr[i])) {
+                        flag1= true;
+                        continue;
+
+                    } else {
+                        flag1 = false;
+                        break;
+                    }
+
+                }
+
+
+                if ((role1.getRights() == rights) && (flag1 == true)) {
+                    //System.out.println("my " + String.valueOf(role1.getRights()) + " " + " bd " + String.valueOf(rights));
+                    System.out.println("my " + role1.getSourse() + " " + " bd " + sourse);
+
+                    break;
+                }
+                else{
+                    flag1 = false;
+                }
+
+            }
+
+        }
+        if (flag1 != true)
+        {
+            System.exit(4);
+        }
         /*for (int i = 0; i < role.length; i++) {
             if (user.getLogin().equals(role[i].getLogin())) {
                 if (role[i].checkRights(role1) == 1) {

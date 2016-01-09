@@ -31,6 +31,10 @@ public class Role {
         this.sourse = sourse;
     }
 
+    public String getSourse(){return sourse;}
+
+    public Roles getRights() {return  rights;}
+
     public String getLogin() {
         return this.login;
     }

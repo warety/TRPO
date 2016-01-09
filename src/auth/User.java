@@ -13,7 +13,7 @@ public class User {
 
 
     public User() {
-        this.id = 1;
+        this.id = 0;
         this.name = "";
         this.login = "";
         this.password = "";
@@ -44,6 +44,9 @@ public class User {
     public String getPassword(){
         return password;
     }
+
+    public int getId(){return  id;}
+
 
 
     public int checkUser(User user) {

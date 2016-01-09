@@ -141,14 +141,14 @@ public class Main {
             System.exit(0);
         } else if (arg == 4) {
             Work.checkUser(user1);
-            Work.checkRights(role, user1, role1);
+            Work.checkRights(user1, role1);
             logger.info(login + " Entered");
             logger.info(login + " Get access to " + res + " with role: " + rol);
 
             System.exit(0);
         } else if (arg == 7) {
             Work.checkUser(user1);
-            Work.checkRights(role, user1, role1);
+            Work.checkRights(user1, role1);
             Work.checkVolume(vol);
             acc1.setAcc(user1, role1, Date.valueOf(ds), Date.valueOf(de), Integer.valueOf(vol));
             logger.info(login + " Entered");

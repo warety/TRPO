@@ -9,7 +9,7 @@ INSERT INTO AUTH(ID,NAME,LOGIN,HASH,SALT) VALUES
 INSERT INTO ROLES (ID,AUTH_ID,ROLE,RESOURCE) VALUES
        (1,1,'READ', 'a'),
        (2,1,'WRITE', 'a.b'),
-       (3,2,'EXECUTE', 'a.b.c'),
-       (4,1,'EXECUTE', 'a.bc');
+       (3,2,'EXEC', 'a.b.c'),
+       (4,1,'EXEC', 'a.bc');
 
 
