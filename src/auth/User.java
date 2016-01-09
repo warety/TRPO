@@ -5,15 +5,19 @@ import java.security.NoSuchAlgorithmException;
 
 
 public class User {
+    int id;
+    String name;
     String login;
     String password;
-    static String  salt = "ololo";
+    String  salt = "ololo";
 
 
     public User() {
-
+        this.id = 1;
+        this.name = "";
         this.login = "";
         this.password = "";
+        this.salt = "ololo";
     }
 
 
@@ -32,6 +36,15 @@ public class User {
     public User getUser(User user) {
         return user;
     }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public String getPassword(){
+        return password;
+    }
+
 
     public int checkUser(User user) {
         if (user.login.equals(this.login)) {
