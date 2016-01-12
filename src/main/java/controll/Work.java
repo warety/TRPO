@@ -1,6 +1,7 @@
 package controll;
 
 import accaunt.Accaunt;
+import auth.Hash;
 import auth.User;
 import org.flywaydb.core.Flyway;
 import role.Role;
@@ -53,7 +54,11 @@ public class Work {
 
     }
 
-    public User checkUser(User user1) throws SQLException, FileNotFoundException {
+    public User getUser() {return user;}
+
+    public Role getRole() {return role;}
+
+    public int checkUser(String login, String password) throws SQLException, FileNotFoundException {
 
 
 
@@ -69,18 +74,21 @@ public class Work {
         resultSet = ps.executeQuery();
         while (resultSet.next()) {
 
-            String login = resultSet.getString("login");
-            String password = resultSet.getString("hash");
-            if (user1.getLogin().equals(login)) {
+            String loginbd = resultSet.getString("login");
+            String passwordbd = resultSet.getString("hash");
+            if (login.equals(loginbd)) {
+                password = Hash.makeHash(password, resultSet.getString("salt"));
+                System.out.println(password);
 
                 flag = true;
 
-                if (user1.getPassword().equals(password)) {
-                    user = new User(resultSet.getInt("id"), resultSet.getString("name"), login, password, resultSet.getString("salt"));
+                if (password.equals(passwordbd)) {
+                    user = new User(resultSet.getInt("id"), resultSet.getString("name"), loginbd, passwordbd, resultSet.getString("salt"));
                     break;
                 } else{
                     logger.error("Wrong pass");
-                    System.exit(2);
+                    return 2;
+                    //System.exit(2);
                 }
 
 
@@ -89,10 +97,11 @@ public class Work {
 
         if (flag == false) {
             logger.error("Wrong login");
-            System.exit(1);
+            return 1;
+            //System.exit(1);
         }
 
-        return user;
+        return 0;
 
 
 
@@ -101,7 +110,7 @@ public class Work {
 
 
 
-    public Role checkRights( User user, Role role1) throws SQLException {
+    public int checkRights(User user, Roles rights, String sourse) throws SQLException {
 
 
         ResultSet resultSet = null;
@@ -116,11 +125,11 @@ public class Work {
         boolean l = false;
         while(resultSet.next())
         {
-            Roles rights = Roles.valueOf(resultSet.getString("ROLE"));
-            String sourse = resultSet.getString("RESOURCE");
+            Roles rightsbd = Roles.valueOf(resultSet.getString("ROLE"));
+            String soursebd = resultSet.getString("RESOURCE");
 
-            String parse[] = role1.getSourse().split("\\.");
-            String[] atrStr = sourse.split("\\.");
+            String parse[] = sourse.split("\\.");
+            String[] atrStr = soursebd.split("\\.");
             if (parse.length >= atrStr.length) {
                 flag1 = false;
 
@@ -137,7 +146,7 @@ public class Work {
                 }
 
 
-                if ((role1.getRights() == rights) && (flag1 == true)) {
+                if ((rights == rightsbd) && (flag1 == true)) {
 
                     role = new Role(resultSet.getInt("id"), resultSet.getInt("auth_id"), rights, sourse);
 
@@ -153,39 +162,48 @@ public class Work {
         if (flag1 != true)
         {
             logger.error("No access");
-            System.exit(4);
+            return 4;
+            //System.exit(4);
         }
 
-        return role;
+        return 0;
 
     }
 
-    public void checkDate(String str1) {
+    public int checkDate(String str1) {
         try {
             Calendar calendar = new GregorianCalendar();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
             formatter.setLenient(false);
             calendar.setTime(formatter.parse(str1));
+            return 0;
 
 
         } catch (Exception e) {
             logger.error("Wrong date formate");
-            System.exit(5);
+            return 5;
+            //System.exit(5);
         }
 
 
     }
 
-    public void checkVolume(String vol) {
+    public int checkVolume(String vol) {
         try {
             Integer.parseInt(vol);
             if (Integer.valueOf(vol) < 0) {
                 logger.error("Wrong value of volume");
-                System.exit(5);
+                return 5;
+                //System.exit(5);
+            }
+            else
+            {
+                return 0;
             }
         } catch (NumberFormatException e) {
             logger.error("Wrong value of volume");
-            System.exit(5);
+            return 5;
+            //System.exit(5);
         }
 
     }

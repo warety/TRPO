@@ -35,10 +35,10 @@ CREATE INDEX IDX_AUTHORITY
   INSERT INTO AUTH(ID,NAME,LOGIN,HASH,SALT) VALUES
        (1, 'John Doe', 'jdoe',
        'cca635b25156988da32d2f77c44d67a',
-       'saltsaltsalt'), -- sup3rpaZZ
+       'ololo'), -- sup3rpaZZ
        (2, 'Jane Row', 'jrow',
        'd3f1872ff3dd7e2cef9be2af9cf58fb',
-       'supersalt'); -- Qweqrty12
+       'ololo'); -- Qweqrty12
 
 INSERT INTO ROLES (ID,AUTH_ID,ROLE,RESOURCE) VALUES
        (1,1,'READ', 'a'),
