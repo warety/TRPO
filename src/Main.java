@@ -1,18 +1,17 @@
 import accaunt.Accaunt;
 import auth.User;
 import controll.Work;
+import org.apache.commons.cli.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import role.Role;
 import role.Roles;
-import org.apache.commons.cli.*;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Scanner;
-
-import org.apache.logging.log4j.*;
 
 
 public class Main {
@@ -137,6 +136,7 @@ public class Main {
         User user1 = new User(login, pass);
 
         Role role1 = new Role(Roles.valueOf(rol), res);
+        acc1.show();
         if (arg == 2) {
             work.checkUser(user1);
             logger.info(login + " Entered");
@@ -152,8 +152,10 @@ public class Main {
 
             System.exit(0);
         } else if (arg == 7) {
-            work.checkUser(user1);
-            work.checkRights(user1, role1);
+            user1 = work.checkUser(user1);
+            System.out.println(user1.getId() + " " + user1.getLogin() + " " + user1.getPassword());
+            role1 = work.checkRights(user1, role1);
+            System.out.println(role1.getId() + " " + role1.getUser_id() + " " + role1.getSourse() + " " + role1.getRights().toString());
             work.checkVolume(vol);
             acc1.setAcc(user1, role1, Date.valueOf(ds), Date.valueOf(de), Integer.valueOf(vol));
             logger.info(login + " Entered");
@@ -168,6 +170,7 @@ public class Main {
         }
 
     }
+
 
     static void printHelp(Options options) {
         final PrintWriter writer = new PrintWriter(System.out);

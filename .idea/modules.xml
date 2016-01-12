@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AAAproj.iml" filepath="$PROJECT_DIR$/AAAproj.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/TRPO.iml" filepath="$PROJECT_DIR$/.idea/TRPO.iml" />
     </modules>
   </component>
 </project>
