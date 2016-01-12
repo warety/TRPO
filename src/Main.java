@@ -70,6 +70,8 @@ public class Main {
                 .addOption("de", true, "date end")
                 .addOption("vol", true, "value");
 
+        Work work = new Work();
+
         CommandLineParser parser = new DefaultParser();
         try {
             CommandLine cmd = parser.parse(options, args);
@@ -108,21 +110,21 @@ public class Main {
             }
             if (cmd.hasOption("ds")) {
                 ds = cmd.getOptionValue("ds");
-                Work.checkDate(ds);
+                work.checkDate(ds);
                 logger.info("Date start:" + ds);
                 arg++;
 
             }
             if (cmd.hasOption("de")) {
                 de = cmd.getOptionValue("de");
-                Work.checkDate(de);
+                work.checkDate(de);
                 logger.info("Date end:" + de);
                 arg++;
 
             }
             if (cmd.hasOption("vol")) {
                 vol = cmd.getOptionValue("vol");
-                Work.checkVolume(vol);
+                work.checkVolume(vol);
                 logger.info("Volume:" + vol);
                 arg++;
             }
@@ -133,23 +135,26 @@ public class Main {
         }
 
         User user1 = new User(login, pass);
-        Role role1 = new Role(user1, Roles.valueOf(rol), res);
+
+        Role role1 = new Role(Roles.valueOf(rol), res);
         if (arg == 2) {
-            Work.checkUser(user1);
+            work.checkUser(user1);
             logger.info(login + " Entered");
 
             System.exit(0);
         } else if (arg == 4) {
-            Work.checkUser(user1);
-            Work.checkRights(user1, role1);
+            user1 = work.checkUser(user1);
+            System.out.println(user1.getId() + " " + user1.getLogin() + " " + user1.getPassword());
+            role1 = work.checkRights(user1, role1);
+            System.out.println(role1.getId() + " " + role1.getUser_id() + " " + role1.getSourse() + " " + role1.getRights().toString());
             logger.info(login + " Entered");
             logger.info(login + " Get access to " + res + " with role: " + rol);
 
             System.exit(0);
         } else if (arg == 7) {
-            Work.checkUser(user1);
-            Work.checkRights(user1, role1);
-            Work.checkVolume(vol);
+            work.checkUser(user1);
+            work.checkRights(user1, role1);
+            work.checkVolume(vol);
             acc1.setAcc(user1, role1, Date.valueOf(ds), Date.valueOf(de), Integer.valueOf(vol));
             logger.info(login + " Entered");
             logger.info(login + " Get access to " + res + " with role: " + rol);

@@ -26,6 +26,14 @@ public class User {
         this.password = Hash.makeHash(password, salt);
     }
 
+    public User(int id, String name, String login, String password, String salt) {
+        this.id = id;
+        this.name = name;
+        this.login = login;
+        this.password = Hash.makeHash(password, salt);
+        this.salt = salt;
+    }
+
 
     public void setUser(String login, String password) {
         this.login = login;

@@ -21,6 +21,8 @@ import org.apache.logging.log4j.*;
 
 
 public class Work {
+    User user;
+    Role role;
     private static final Logger logger = LogManager.getLogger(Work.class);
     Connection connection;
 
@@ -51,38 +53,19 @@ public class Work {
 
     }
 
-    static public void checkUser(User user1) throws SQLException, FileNotFoundException {
+    public User checkUser(User user1) throws SQLException, FileNotFoundException {
 
 
-        /*for (int i = 0; i < user.length; i++) {
-            if (user1.checkUser(user[i]) == 1) {
-                f = true;
-                break;
-            }
-            else if(user1.checkUser(user[i]) == 2)
-                logger.error("Wrong Password: " + user1.getPassword() + " to " + user1.getLogin());
-                System.exit(2);
-            }
-            if (f == false){
-                logger.error("Wrong login!!!");
-                System.exit(1);
-        }*/
 
-        Connection connection = null;
         ResultSet resultSet = null;
 
-
-        connection = DriverManager.getConnection("jdbc:h2:./aaa", "sa", "");
-        //org.h2.tools.RunScript.execute(connection, new FileReader("dbase/create_db.sql"));
-        //org.h2.tools.RunScript.execute(connection, new FileReader("dbase/fill_db.sql"));
-        //Statement statement = connection.createStatement();
 
         String query = "select * from AUTH";
         boolean flag = false;
         PreparedStatement ps = connection.prepareStatement("SELECT * FROM Auth");
 
 
-        //ps.setString(1, user1.getLogin());
+
         resultSet = ps.executeQuery();
         while (resultSet.next()) {
 
@@ -93,15 +76,24 @@ public class Work {
                 flag = true;
 
                 if (user1.getPassword().equals(password)) {
-
+                    user = new User(resultSet.getInt("id"), resultSet.getString("name"), login, password, resultSet.getString("salt"));
                     break;
-                } else
+                } else{
+                    logger.error("Wrong pass");
                     System.exit(2);
+                }
+
+
             }
         }
 
-        if (flag == false)
+        if (flag == false) {
+            logger.error("Wrong login");
             System.exit(1);
+        }
+
+        return user;
+
 
 
     }
@@ -109,28 +101,16 @@ public class Work {
 
 
 
-    static public void checkRights( User user, Role role1) throws SQLException {
+    public Role checkRights( User user, Role role1) throws SQLException {
 
-        Connection connection = null;
+
         ResultSet resultSet = null;
 
-
-        connection = DriverManager.getConnection("jdbc:h2:./aaa", "sa", "");
-        //org.h2.tools.RunScript.execute(connection, new FileReader("dbase/create_db.sql"));
-        //org.h2.tools.RunScript.execute(connection, new FileReader("dbase/fill_db.sql"));
-        //Statement statement = connection.createStatement();
-
-        //String query = "select * from AUTH";
         boolean flag1 = false;
-        boolean flag2 = false;
-        boolean flag3 = false;
-        PreparedStatement ps = connection.prepareStatement("SELECT * FROM ROLES R, AUTH A where r.auth_id = a.id and a.login = ?");
+        PreparedStatement ps = connection.prepareStatement("SELECT * FROM ROLES R, AUTH A where r.auth_id = a.id and a.id = ?");
 
-
-
-        ps.setString(1, user.getLogin());
+        ps.setString(1, String.valueOf(user.getId()));
         resultSet = ps.executeQuery();
-        System.out.println(role1.getSourse());
 
 
         boolean l = false;
@@ -138,14 +118,11 @@ public class Work {
         {
             Roles rights = Roles.valueOf(resultSet.getString("ROLE"));
             String sourse = resultSet.getString("RESOURCE");
-            System.out.println(rights.toString());
 
             String parse[] = role1.getSourse().split("\\.");
             String[] atrStr = sourse.split("\\.");
             if (parse.length >= atrStr.length) {
                 flag1 = false;
-
-                //System.out.println("my " + parse[0] + " " + " bd " + atrStr[0]);
 
                 for (int i = 0; i < atrStr.length; i++) {
                     if (parse[i].equals(atrStr[i])) {
@@ -161,8 +138,8 @@ public class Work {
 
 
                 if ((role1.getRights() == rights) && (flag1 == true)) {
-                    //System.out.println("my " + String.valueOf(role1.getRights()) + " " + " bd " + String.valueOf(rights));
-                    System.out.println("my " + role1.getSourse() + " " + " bd " + sourse);
+
+                    role = new Role(resultSet.getInt("id"), resultSet.getInt("auth_id"), rights, sourse);
 
                     break;
                 }
@@ -175,23 +152,15 @@ public class Work {
         }
         if (flag1 != true)
         {
+            logger.error("No access");
             System.exit(4);
         }
-        /*for (int i = 0; i < role.length; i++) {
-            if (user.getLogin().equals(role[i].getLogin())) {
-                if (role[i].checkRights(role1) == 1) {
-                    l = true;
-                    break;
-                }
-            }
-        }
-        if (l == false) {
 
-            System.exit(4);
-        }*/
+        return role;
+
     }
 
-    static public void checkDate(String str1) {
+    public void checkDate(String str1) {
         try {
             Calendar calendar = new GregorianCalendar();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-mm-dd");
@@ -200,22 +169,22 @@ public class Work {
 
 
         } catch (Exception e) {
-
+            logger.error("Wrong date formate");
             System.exit(5);
         }
 
 
     }
 
-    static public void checkVolume(String vol) {
+    public void checkVolume(String vol) {
         try {
             Integer.parseInt(vol);
             if (Integer.valueOf(vol) < 0) {
-
+                logger.error("Wrong value of volume");
                 System.exit(5);
             }
         } catch (NumberFormatException e) {
-
+            logger.error("Wrong value of volume");
             System.exit(5);
         }
 
