@@ -9,7 +9,8 @@ import java.util.Objects;
  * Created by alex on 07.10.2015.
  */
 public class Role {
-    String login;
+    int id;
+    int user_id;
     Roles rights;
     String sourse;
 
@@ -17,8 +18,14 @@ public class Role {
 
     }
 
-    public Role(User user, Roles rights, String sourse) {
-        this.login = user.getLogin();
+    public Role(int id, int user_id, Roles rights, String sourse) {
+        this.id = id;
+        this.user_id = user_id;
+        this.rights = rights;
+        this.sourse = sourse;
+    }
+
+    public Role(Roles rights, String sourse) {
         this.rights = rights;
         this.sourse = sourse;
     }
@@ -26,17 +33,19 @@ public class Role {
 
 
     public void setRights(User user, Roles rights, String sourse) {
-        this.login = user.getLogin();
+        this.user_id = user.getId();
         this.rights = rights;
         this.sourse = sourse;
     }
+
+    public int getId(){return id;}
 
     public String getSourse(){return sourse;}
 
     public Roles getRights() {return  rights;}
 
-    public String getLogin() {
-        return this.login;
+    public int getUser_id() {
+        return this.user_id;
     }
 
     public int checkRights(Role role) {
