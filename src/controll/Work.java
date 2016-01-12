@@ -2,42 +2,183 @@ package controll;
 
 import accaunt.Accaunt;
 import auth.User;
+import org.flywaydb.core.Flyway;
 import role.Role;
 import role.Roles;
 
+import javax.annotation.Resource;
 import javax.annotation.processing.SupportedSourceVersion;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import org.apache.logging.log4j.*;
+
 
 
 public class Work {
+    private static final Logger logger = LogManager.getLogger(Work.class);
+    Connection connection;
+
+    Resource resource;
+
+    public Work() throws SQLException {
+
+        connection = getConnection();
+        //df.setLenient(false);
 
 
-    static public void checkUser(User[] user, User user1) {
-        boolean f = false;
+        logger.debug("Migration");
 
-        for (int i = 0; i < user.length; i++) {
+        // Create the Flyway instance
+        Flyway flyway = new Flyway();
+
+        // Point it to the database
+        flyway.setDataSource("jdbc:h2:./aaa", "sa", "");
+
+        // Start the migration
+        flyway.migrate();
+
+    }
+
+    public Connection getConnection() throws SQLException {
+
+        return DriverManager.getConnection("jdbc:h2:./aaa", "sa", "");
+
+    }
+
+    static public void checkUser(User user1) throws SQLException, FileNotFoundException {
+
+
+        /*for (int i = 0; i < user.length; i++) {
             if (user1.checkUser(user[i]) == 1) {
                 f = true;
                 break;
             }
             else if(user1.checkUser(user[i]) == 2)
+                logger.error("Wrong Password: " + user1.getPassword() + " to " + user1.getLogin());
                 System.exit(2);
             }
             if (f == false){
+                logger.error("Wrong login!!!");
                 System.exit(1);
+        }*/
+
+        Connection connection = null;
+        ResultSet resultSet = null;
+
+
+        connection = DriverManager.getConnection("jdbc:h2:./aaa", "sa", "");
+        //org.h2.tools.RunScript.execute(connection, new FileReader("dbase/create_db.sql"));
+        //org.h2.tools.RunScript.execute(connection, new FileReader("dbase/fill_db.sql"));
+        //Statement statement = connection.createStatement();
+
+        String query = "select * from AUTH";
+        boolean flag = false;
+        PreparedStatement ps = connection.prepareStatement("SELECT * FROM Auth");
+
+
+        //ps.setString(1, user1.getLogin());
+        resultSet = ps.executeQuery();
+        while (resultSet.next()) {
+
+            String login = resultSet.getString("login");
+            String password = resultSet.getString("hash");
+            if (user1.getLogin().equals(login)) {
+
+                flag = true;
+
+                if (user1.getPassword().equals(password)) {
+
+                    break;
+                } else
+                    System.exit(2);
+            }
         }
+
+        if (flag == false)
+            System.exit(1);
 
 
     }
 
-    static public void checkRights(Role[] role, User user, Role role1) {
+
+
+
+    static public void checkRights( User user, Role role1) throws SQLException {
+
+        Connection connection = null;
+        ResultSet resultSet = null;
+
+
+        connection = DriverManager.getConnection("jdbc:h2:./aaa", "sa", "");
+        //org.h2.tools.RunScript.execute(connection, new FileReader("dbase/create_db.sql"));
+        //org.h2.tools.RunScript.execute(connection, new FileReader("dbase/fill_db.sql"));
+        //Statement statement = connection.createStatement();
+
+        //String query = "select * from AUTH";
+        boolean flag1 = false;
+        boolean flag2 = false;
+        boolean flag3 = false;
+        PreparedStatement ps = connection.prepareStatement("SELECT * FROM ROLES R, AUTH A where r.auth_id = a.id and a.login = ?");
+
+
+
+        ps.setString(1, user.getLogin());
+        resultSet = ps.executeQuery();
+        System.out.println(role1.getSourse());
+
+
         boolean l = false;
-        for (int i = 0; i < role.length; i++) {
-            if (user.checkUser(role[i].getUser()) == 1) {
+        while(resultSet.next())
+        {
+            Roles rights = Roles.valueOf(resultSet.getString("ROLE"));
+            String sourse = resultSet.getString("RESOURCE");
+            System.out.println(rights.toString());
+
+            String parse[] = role1.getSourse().split("\\.");
+            String[] atrStr = sourse.split("\\.");
+            if (parse.length >= atrStr.length) {
+                flag1 = false;
+
+                //System.out.println("my " + parse[0] + " " + " bd " + atrStr[0]);
+
+                for (int i = 0; i < atrStr.length; i++) {
+                    if (parse[i].equals(atrStr[i])) {
+                        flag1= true;
+                        continue;
+
+                    } else {
+                        flag1 = false;
+                        break;
+                    }
+
+                }
+
+
+                if ((role1.getRights() == rights) && (flag1 == true)) {
+                    //System.out.println("my " + String.valueOf(role1.getRights()) + " " + " bd " + String.valueOf(rights));
+                    System.out.println("my " + role1.getSourse() + " " + " bd " + sourse);
+
+                    break;
+                }
+                else{
+                    flag1 = false;
+                }
+
+            }
+
+        }
+        if (flag1 != true)
+        {
+            System.exit(4);
+        }
+        /*for (int i = 0; i < role.length; i++) {
+            if (user.getLogin().equals(role[i].getLogin())) {
                 if (role[i].checkRights(role1) == 1) {
                     l = true;
                     break;
@@ -47,7 +188,7 @@ public class Work {
         if (l == false) {
 
             System.exit(4);
-        }
+        }*/
     }
 
     static public void checkDate(String str1) {
