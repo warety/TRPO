@@ -1,4 +1,5 @@
 import accaunt.Accaunt;
+import auth.Hash;
 import auth.User;
 import controll.Work;
 import org.apache.commons.cli.*;
@@ -17,7 +18,7 @@ import java.text.ParseException;
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
 
-    public static void main(String[] args) throws ParseException, FileNotFoundException, SQLException {
+    public static int main(String[] args) throws ParseException, FileNotFoundException, SQLException {
         logger.trace("Application started");
 
         String login = "";
@@ -29,35 +30,14 @@ public class Main {
         String vol = "";
         int arg = 0;
 
+        int result = 10;
+
+        //String str = Hash.makeHash("sup3rpaZZ", "ololo");
+       // System.out.println(str);
+
 
 
         Accaunt acc1 = new Accaunt();
-
-
-        User user[] = new User[2];
-        for (int i = 0; i < 2; i++)
-            user[i] = new User();
-        user[0].setUser("jdoe", "sup3rpaZZ");
-        user[1].setUser("jrow", "Qweqrty12");
-        String str = user[0].getPassword();
-        str = user[1].getPassword();
-        System.out.print(str);
-        //User user1 = new User("jdoe", "sup3rpaZZ");
-       // Work.checkUser(user1);
-
-
-        Role role[] = new Role[5];
-        for (int i = 0; i < role.length; i++)
-            role[i] = new Role();
-
-        role[0].setRights(user[0], Roles.READ, "a");
-        role[1].setRights(user[0], Roles.WRITE, "a.b");
-        role[2].setRights(user[1], Roles.EXEC, "a.b.c");
-        role[3].setRights(user[0], Roles.EXEC, "a.bc");
-        role[4].setRights(user[0], Roles.READ, "src");
-        String auto = "";
-
-
 
         Options options = new Options()
                 .addOption("h", false, "print this help message")
@@ -103,27 +83,34 @@ public class Main {
                     arg++;
                 } else {
                     logger.error("Unknown role:"+ cmd.getOptionValue("role"));
-                    System.exit(3);
+                    return result = 3;
+                    //System.exit(3);
                 }
 
             }
             if (cmd.hasOption("ds")) {
                 ds = cmd.getOptionValue("ds");
-                work.checkDate(ds);
+                if((result = work.checkDate(ds)) != 0){
+                    return result;
+                }
                 logger.info("Date start:" + ds);
                 arg++;
 
             }
             if (cmd.hasOption("de")) {
                 de = cmd.getOptionValue("de");
-                work.checkDate(de);
+                if((result = work.checkDate(de)) != 0){
+                    return result;
+                }
                 logger.info("Date end:" + de);
                 arg++;
 
             }
             if (cmd.hasOption("vol")) {
                 vol = cmd.getOptionValue("vol");
-                work.checkVolume(vol);
+                if((result = work.checkVolume(vol)) != 0){
+                    return result;
+                }
                 logger.info("Volume:" + vol);
                 arg++;
             }
@@ -133,41 +120,44 @@ public class Main {
 
         }
 
-        User user1 = new User(login, pass);
-
-        Role role1 = new Role(Roles.valueOf(rol), res);
-        acc1.show();
         if (arg == 2) {
-            work.checkUser(user1);
-            logger.info(login + " Entered");
-
-            System.exit(0);
+            result = work.checkUser(login, pass);
+            System.out.println(result);
+            //
         } else if (arg == 4) {
-            user1 = work.checkUser(user1);
-            System.out.println(user1.getId() + " " + user1.getLogin() + " " + user1.getPassword());
-            role1 = work.checkRights(user1, role1);
-            System.out.println(role1.getId() + " " + role1.getUser_id() + " " + role1.getSourse() + " " + role1.getRights().toString());
-            logger.info(login + " Entered");
-            logger.info(login + " Get access to " + res + " with role: " + rol);
+            result = work.checkUser(login, pass);
+            //System.out.println(work.getUser().getId() + " " + work.getUser().getLogin() + " " + work.getUser().getPassword());
+            if (result == 0) {
+                logger.info(login + " Entered");
+                result = work.checkRights(work.getUser(), Roles.valueOf(rol), res );
+                //System.out.println(role1.getId() + " " + role1.getUser_id() + " " + role1.getSourse() + " " + role1.getRights().toString());
 
-            System.exit(0);
+            }
+
         } else if (arg == 7) {
-            user1 = work.checkUser(user1);
-            System.out.println(user1.getId() + " " + user1.getLogin() + " " + user1.getPassword());
-            role1 = work.checkRights(user1, role1);
-            System.out.println(role1.getId() + " " + role1.getUser_id() + " " + role1.getSourse() + " " + role1.getRights().toString());
-            work.checkVolume(vol);
-            acc1.setAcc(user1, role1, Date.valueOf(ds), Date.valueOf(de), Integer.valueOf(vol));
-            logger.info(login + " Entered");
-            logger.info(login + " Get access to " + res + " with role: " + rol);
-            logger.info("Set ds " + ds + " and de " + de + " with vol " + vol);
+            result = work.checkUser(login, pass);
+            //System.out.println(work.getUser().getId() + " " + work.getUser().getLogin() + " " + work.getUser().getPassword());
+            if (result == 0) {
+                result = work.checkRights(work.getUser(), Roles.valueOf(rol), res );
+                //System.out.println(role1.getId() + " " + role1.getUser_id() + " " + role1.getSourse() + " " + role1.getRights().toString());
+            }
+            if(result == 0) {
+                acc1.setAcc(work.getUser(), work.getRole(), Date.valueOf(ds), Date.valueOf(de), Integer.valueOf(vol));
+                logger.info(login + " Entered");
+                logger.info(login + " Get access to " + res + " with role: " + rol);
+                logger.info("Set ds " + ds + " and de " + de + " with vol " + vol);
+            }
 
 
-            System.exit(0);
+
+            //System.exit(0);
         }
         else{
             printHelp(options);
+            result = 255;
         }
+        System.out.println(result);
+        return result;
 
     }
 

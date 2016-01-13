@@ -1,2 +1,4 @@
-java -classpath "commons-cli-1.3.1.jar;AAAproj.jar" Main %* 
-pause
+java -jar "target\aaa-2.0.jar" %*
+
+
+echo %ERRORLEVEL%
