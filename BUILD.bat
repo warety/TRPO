@@ -1,1 +1,1 @@
-mvn site 
+mvn clean cobertura:cobertura findbugs:findbugs checkstyle:checkstyle pmd:pmd package
