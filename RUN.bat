@@ -1,4 +1,6 @@
-java -jar "target\aaa-2.0.jar" %*
+java -jar target\aaa-1.0aaa.jar 
 
 
-echo %ERRORLEVEL%
+echo %ERRORLEVEL% 
+
+pause

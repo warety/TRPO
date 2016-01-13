@@ -18,7 +18,7 @@ import java.text.ParseException;
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class);
 
-    public static int main(String[] args) throws ParseException, FileNotFoundException, SQLException {
+    public static int work(String[] args) throws ParseException, FileNotFoundException, SQLException {
         logger.trace("Application started");
 
         String login = "";
@@ -32,8 +32,6 @@ public class Main {
 
         int result = 10;
 
-        //String str = Hash.makeHash("sup3rpaZZ", "ololo");
-       // System.out.println(str);
 
 
 
@@ -84,7 +82,6 @@ public class Main {
                 } else {
                     logger.error("Unknown role:"+ cmd.getOptionValue("role"));
                     return result = 3;
-                    //System.exit(3);
                 }
 
             }
@@ -123,23 +120,18 @@ public class Main {
         if (arg == 2) {
             result = work.checkUser(login, pass);
             System.out.println(result);
-            //
         } else if (arg == 4) {
             result = work.checkUser(login, pass);
-            //System.out.println(work.getUser().getId() + " " + work.getUser().getLogin() + " " + work.getUser().getPassword());
             if (result == 0) {
                 logger.info(login + " Entered");
                 result = work.checkRights(work.getUser(), Roles.valueOf(rol), res );
-                //System.out.println(role1.getId() + " " + role1.getUser_id() + " " + role1.getSourse() + " " + role1.getRights().toString());
 
             }
 
         } else if (arg == 7) {
             result = work.checkUser(login, pass);
-            //System.out.println(work.getUser().getId() + " " + work.getUser().getLogin() + " " + work.getUser().getPassword());
             if (result == 0) {
                 result = work.checkRights(work.getUser(), Roles.valueOf(rol), res );
-                //System.out.println(role1.getId() + " " + role1.getUser_id() + " " + role1.getSourse() + " " + role1.getRights().toString());
             }
             if(result == 0) {
                 acc1.setAcc(work.getUser(), work.getRole(), Date.valueOf(ds), Date.valueOf(de), Integer.valueOf(vol));
@@ -150,7 +142,6 @@ public class Main {
 
 
 
-            //System.exit(0);
         }
         else{
             printHelp(options);
@@ -159,6 +150,10 @@ public class Main {
         System.out.println(result);
         return result;
 
+    }
+
+    public static void main(String[] args) throws SQLException, FileNotFoundException, ParseException {
+        System.exit(work(args));
     }
 
 
